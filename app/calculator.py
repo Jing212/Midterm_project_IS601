@@ -3,6 +3,7 @@ from decimal import Decimal
 from app.calculation import Calculation
 from app.calculator_memento import CalculatorMemento
 from app.exceptions import ValidationError
+from app.history import HistoryObserver
 
 
 class Calculator:
@@ -25,6 +26,7 @@ class Calculator:
         # Memento stacks
         self._undo_stack: list[CalculatorMemento] = []
         self._redo_stack: list[CalculatorMemento] = []
+        self._observers: list[HistoryObserver] = []
 
     def _create_memento(self) -> CalculatorMemento:
         """Save the current calculator history state."""
@@ -42,25 +44,26 @@ class Calculator:
         operand1,
         operand2,
     ) -> Decimal:
-        """Perform a calculation and save history for undo."""
+        """Perform a calculation, update history, and notify observers."""
 
-        # Calculate first so invalid inputs do not change history.
         calculation = Calculation.create(
             operation,
             operand1,
             operand2,
         )
 
-        # Save the previous state before modifying history.
         self._undo_stack.append(self._create_memento())
-
-        # A new calculation invalidates the redo history.
         self._redo_stack.clear()
 
         self._history.append(calculation)
 
         if len(self._history) > self._max_history_size:
             self._history.pop(0)
+
+        self.notify_observers(
+            event="calculation",
+            calculation=calculation,
+        )
 
         return calculation.result
 
@@ -113,3 +116,33 @@ class Calculator:
         """Return the number of calculations in history."""
 
         return len(self._history)
+
+    def register_observer(self, observer: HistoryObserver) -> None:
+        """Register an observer to receive calculator events."""
+
+        if not isinstance(observer, HistoryObserver):
+            raise TypeError("Observer must inherit from HistoryObserver.")
+
+        if observer not in self._observers:
+            self._observers.append(observer)
+        
+    def remove_observer(self, observer: HistoryObserver) -> None:
+        """Remove a registered observer."""
+
+        if observer in self._observers:
+            self._observers.remove(observer)
+        
+    
+    def notify_observers(
+            self,
+            event: str,
+            calculation: Calculation | None = None,
+            ) -> None:
+        """Notify all registered observers."""
+        
+        for observer in self._observers.copy():
+            observer.update(
+                event,
+                calculation,
+                self.get_history(),
+            )
