@@ -158,11 +158,11 @@ def test_autosave_disabled(tmp_path):
     assert not csv_file.exists()
 
 
-def test_autosave_ignores_other_events(tmp_path):
+def test_autosave_ignores_unknown_events(tmp_path):
     csv_file = tmp_path / "history.csv"
 
     observer = AutoSaveObserver(csv_file)
-    observer.update("undo", None, [])
+    observer.update("unknown_event", None, [])
 
     assert not csv_file.exists()
 

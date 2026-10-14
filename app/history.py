@@ -71,7 +71,7 @@ class LoggingObserver(HistoryObserver):
         self._handler.close()
 
 class AutoSaveObserver(HistoryObserver):
-    """Automatically save calculation history to CSV."""
+    """Save history whenever its state changes."""
 
     def __init__(
         self,
@@ -89,7 +89,18 @@ class AutoSaveObserver(HistoryObserver):
         calculation: Calculation | None,
         history: list[Calculation],
     ) -> None:
-        if not self.enabled or event != "calculation":
+        if not self.enabled:
+            return
+
+        supported_events = {
+            "calculation",
+            "undo",
+            "redo",
+            "clear",
+            "load",
+        }
+
+        if event not in supported_events:
             return
 
         self.history_file.parent.mkdir(
@@ -107,10 +118,7 @@ class AutoSaveObserver(HistoryObserver):
 
         records = [calc.to_dict() for calc in history]
 
-        dataframe = pd.DataFrame(
-            records,
-            columns=columns,
-        )
+        dataframe = pd.DataFrame(records, columns=columns)
 
         dataframe.to_csv(
             self.history_file,
