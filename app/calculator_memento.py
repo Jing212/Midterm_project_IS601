@@ -1,3 +1,5 @@
+"""Provide history snapshots for undo and redo."""
+
 from dataclasses import dataclass
 from app.calculation import Calculation
 

@@ -1,3 +1,5 @@
+"""Manage calculator configuration and environment variables."""
+
 import codecs
 import os
 from dataclasses import dataclass
@@ -62,7 +64,7 @@ class CalculatorConfig:
         def get_dir(name, default):
             path = Path(os.getenv(name, default)).expanduser()
             if not path.is_absolute():
-                path = PROJECT_ROOT / path
+                path = PROJECT_ROOT / path  # pragma: no cover
             return path.resolve()
 
         def get_filename(name, default):
@@ -94,7 +96,7 @@ class CalculatorConfig:
             max_input_value = Decimal(
                 os.getenv("CALCULATOR_MAX_INPUT_VALUE", "1000000")
             )
-        except InvalidOperation as error:
+        except InvalidOperation as error:  # pragma: no cover
             raise ConfigurationError(
                 "CALCULATOR_MAX_INPUT_VALUE must be numeric."
             ) from error

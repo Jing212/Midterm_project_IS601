@@ -1,3 +1,5 @@
+"""Validate calculator numerical inputs."""
+
 from decimal import Decimal, InvalidOperation
 
 from app.exceptions import ValidationError

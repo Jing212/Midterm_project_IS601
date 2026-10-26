@@ -1,35 +1,43 @@
+"""Implement calculator arithmetic strategies and factory."""
+
 from abc import ABC, abstractmethod
 from decimal import Decimal
 
 
 class Operation(ABC):
-
+    """Abstract base class for arithmetic operations."""
     @abstractmethod
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        """Execute the arithmetic operation using two operands."""
         pass
 
 class Addition(Operation):
+    """Perform addition of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         return a + b
 
 
 class Subtraction(Operation):
+    """Perform subtraction of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         return a - b
 
 
 class Multiplication(Operation):
+    """Perform multiplication of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         return a * b
 
 
 class Division(Operation):
+    """Perform division of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if b == 0:
             raise ValueError("Cannot divide by zero.")
         return a / b
 
 class Power(Operation):
+    """Perform exponentiation of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if a == 0 and b < 0:
             raise ValueError("Zero cannot have a negative exponent.")
@@ -41,6 +49,7 @@ class Power(Operation):
 
 
 class Root(Operation):
+    """Calculate the nth root of a number."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if b == 0:
             raise ValueError("Root degree cannot be zero.")
@@ -63,12 +72,14 @@ class Root(Operation):
 
 
 class Modulus(Operation):
+    """Calculate the modulus of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if b == 0:
             raise ValueError("Cannot calculate modulus by zero.")
         return a % b
 
 class IntegerDivision(Operation):
+    """Perform integer division of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if b == 0:
             raise ValueError("Cannot divide by zero.")
@@ -76,6 +87,7 @@ class IntegerDivision(Operation):
 
 
 class Percentage(Operation):
+    """Calculate the percentage of two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         if b == 0:
             raise ValueError("Cannot calculate percentage with zero denominator.")
@@ -83,11 +95,12 @@ class Percentage(Operation):
 
 
 class AbsoluteDifference(Operation):
+    """Calculate the absolute difference between two numbers."""
     def execute(self, a: Decimal, b: Decimal) -> Decimal:
         return abs(a - b)
 
 class OperationFactory:
-
+    """Create arithmetic operation strategies by name."""
     _operations = {
         "add": Addition,
         "subtract": Subtraction,

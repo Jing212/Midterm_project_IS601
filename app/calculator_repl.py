@@ -1,27 +1,20 @@
+"""Implement the calculator command-line interface."""
 
 from app.calculator import Calculator
 from app.calculator_config import CalculatorConfig
 from app.exceptions import CalculatorError
-
+from app.command_registry import COMMAND_REGISTRY
+from app import registered_commands  # pylint: disable=unused-import
 
 class CalculatorREPL:
     """Command-line interface for the calculator."""
-
-    OPERATIONS = {
-        "add",
-        "subtract",
-        "multiply",
-        "divide",
-        "power",
-        "root",
-        "modulus",
-        "int_divide",
-        "percent",
-        "abs_diff",
-    }
-
     def __init__(self, calculator: Calculator):
         self.calculator = calculator
+
+    @property
+    def OPERATIONS(self):
+        return set(COMMAND_REGISTRY)
+
 
     def show_help(self) -> None:
         """Display available calculator commands."""
@@ -30,8 +23,11 @@ class CalculatorREPL:
         print("-" * 45)
 
         print("Arithmetic Operations:")
-        for operation in sorted(self.OPERATIONS):
-            print(f"  {operation} <number1> <number2>")
+        for name, info in sorted(COMMAND_REGISTRY.items()):
+            print(
+            f"  {name} <number1> <number2>"
+            f" - {info.description}"
+        )
 
         print("\nHistory Commands:")
         print("  history  - Show calculation history")
@@ -96,10 +92,10 @@ class CalculatorREPL:
                 return True
 
             try:
-                result = self.calculator.perform_operation(
-                    command,
-                    parts[1],
-                    parts[2],
+                result = COMMAND_REGISTRY[command].handler(
+                self.calculator,
+                parts[1],
+                parts[2],
                 )
 
                 print(f"Result: {result}")
@@ -188,7 +184,6 @@ class CalculatorREPL:
             except (EOFError, KeyboardInterrupt):
                 print("\nGoodbye!")
                 break
-
 
 def main():
     config = CalculatorConfig.from_env()

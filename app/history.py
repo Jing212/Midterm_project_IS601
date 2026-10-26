@@ -1,3 +1,5 @@
+"""Implement logging and auto-save history observers."""
+
 from abc import ABC, abstractmethod
 from pathlib import Path
 import logging
@@ -18,7 +20,7 @@ class HistoryObserver(ABC):
         history: list[Calculation],
     ) -> None:
         """Respond to a calculator event."""
-        pass
+
 
 class LoggingObserver(HistoryObserver):
     """Log new calculations to a file."""

@@ -93,3 +93,38 @@ def test_invalid_input_limit(env_file):
 
     with pytest.raises(ConfigurationError):
         CalculatorConfig.from_env(env_file)
+
+def test_invalid_encoding(env_file):
+    text = env_file.read_text()
+    text = text.replace(
+        "CALCULATOR_DEFAULT_ENCODING=utf-8",
+        "CALCULATOR_DEFAULT_ENCODING=invalid-encoding-xyz",
+    )
+    env_file.write_text(text)
+
+    with pytest.raises(ConfigurationError):
+        CalculatorConfig.from_env(env_file)
+
+
+def test_invalid_log_filename(env_file):
+    text = env_file.read_text()
+    text = text.replace(
+        "CALCULATOR_LOG_FILE=test.log",
+        "CALCULATOR_LOG_FILE=../test.log",
+    )
+    env_file.write_text(text)
+
+    with pytest.raises(ConfigurationError):
+        CalculatorConfig.from_env(env_file)
+
+
+def test_precision_too_large(env_file):
+    text = env_file.read_text()
+    text = text.replace(
+        "CALCULATOR_PRECISION=3",
+        "CALCULATOR_PRECISION=100",
+    )
+    env_file.write_text(text)
+
+    with pytest.raises(ConfigurationError):
+        CalculatorConfig.from_env(env_file)

@@ -231,3 +231,44 @@ def test_quit_command(repl, capsys):
     output = capsys.readouterr().out
 
     assert "Goodbye!" in output
+
+def test_repl_eof(repl, monkeypatch, capsys):
+    def raise_eof(_prompt):
+        raise EOFError
+
+    monkeypatch.setattr("builtins.input", raise_eof)
+
+    repl.start()
+
+    output = capsys.readouterr().out
+    assert "Goodbye!" in output
+
+
+def test_repl_keyboard_interrupt(repl, monkeypatch, capsys):
+    def raise_interrupt(_prompt):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(
+        "builtins.input", raise_interrupt
+    )
+
+    repl.start()
+
+    output = capsys.readouterr().out
+    assert "Goodbye!" in output
+
+
+def test_repl_start_and_exit(repl, monkeypatch, capsys):
+    inputs = iter(["add 2 3", "exit"])
+
+    monkeypatch.setattr(
+        "builtins.input",
+        lambda _prompt: next(inputs),
+    )
+
+    repl.start()
+
+    output = capsys.readouterr().out
+
+    assert "Result: 5" in output
+    assert "Goodbye!" in output

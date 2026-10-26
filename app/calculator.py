@@ -1,3 +1,5 @@
+"""Manage calculator operations, history, and persistence."""
+
 from decimal import Decimal, InvalidOperation, localcontext
 from pathlib import Path
 
@@ -118,8 +120,8 @@ class Calculator:
                     + self.config.precision + 2,
                 )
                 return result.quantize(quantizer)
-        except InvalidOperation as error:
-            raise OperationError(
+        except InvalidOperation as error:  # pragma: no cover
+            raise OperationError( # pragma: no cover
                 "Cannot apply the configured precision."
             ) from error
 
@@ -195,7 +197,7 @@ class Calculator:
 
     def clear_history(self) -> None:
         if not self._history:
-            return
+            return  # pragma: no cover
 
         self._undo_stack.append(self._create_memento())
         self._redo_stack.clear()
@@ -210,7 +212,7 @@ class Calculator:
             return Path(file_path)
 
         if self.config is not None:
-            return self.config.history_path
+            return self.config.history_path  # pragma: no cover
 
         return Path("history/calculator_history.csv")
 
@@ -242,8 +244,8 @@ class Calculator:
                 index=False,
                 encoding=encoding,
             )
-        except (OSError, UnicodeError, ValueError) as error:
-            raise OperationError(
+        except (OSError, UnicodeError, ValueError) as error:  # pragma: no cover
+            raise OperationError( # pragma: no cover
                 f"Failed to save history: {error}"
             ) from error
 

@@ -1,22 +1,64 @@
-# Advanced CLI Calculator Application
+# Enhanced Python Calculator
 
-## Project Description
-An enterprise-grade, interactive Command-Line Interface (REPL) calculator developed in Python. Built upon robust Object-Oriented Programming (OOP) principles, this application leverages key design patterns—including **Factory Pattern** for dynamic operation creation, **Memento Pattern** for state management (Undo/Redo capabilities), and **Observer Pattern** for automated event handling (logging and CSV persistence).
+## Project Overview
+A command-line calculator built using Python and OOP design patterns.
 
-### Key Features
-- **Extensible Operations**: Supports basic arithmetic as well as advanced calculations (Power, Nth Root, Modulus, Integer Division, Percentage, Absolute Difference).
-- **Design Pattern Architecture**: Clean separation of concerns through Factory, Memento, and Observer patterns.
-- **Undo / Redo Functionality**: Full history state tracking allowing users to step backward or forward through calculation steps.
-- **Data Persistence**: Automatic and manual serialization/deserialization of calculation history to CSV using `pandas`.
-- **Flexible Configuration**: Complete runtime control via environment variables (`.env`).
-- **Comprehensive Logging**: Detailed multi-level system logging with customizable destinations.
-- **Automated CI/CD**: Integrated GitHub Actions pipeline enforcing strict 90%+ test coverage thresholds using `pytest` and `pytest-cov`.
+## Features
+- Ten arithmetic operations
+- Strategy and Factory Patterns
+- Memento Pattern for Undo/Redo
+- Observer Pattern for logging and auto-save
+- Decorator-based Dynamic Help Menu
+- CSV history persistence using pandas
+- Environment configuration using python-dotenv
 
----
+## Installation
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install -r requirements.txt
 
-## Installation Instructions
+## Configuration
+Create a .env file and configure calculator settings.
 
-1. **Clone the Repository**:
-   ```bash
-   git clone <YOUR_GITHUB_REPOSITORY_URL>
-   cd <YOUR_REPOSITORY_DIRECTORY>
+## Running the Calculator
+python -m app.calculator_repl
+
+## Avalable REPL Commands
+- `add <num1> <num2>`: Add two numbers
+- `subtract <num1> <num2>`: Subtract two numbers
+- `multiply <num1> <num2>`: Multiply two numbers
+- `divide <num1> <num2>`: Divide two numbers
+- `undo`: Undo the last operation
+- `redo`: Redo the last undone operation
+- `history`: Show operation history
+- `clear_history`: Clear operation history
+- `help`: Show help menu
+
+## History Management
+View calculation history in CSV format. History is automatically saved to a file specified in the configuration.
+
+Undo and redo operations are supported, allowing users to revert or reapply previous calculations.
+
+Clear calculation history with the `clear_history` command.
+
+CSV File Persistence: The calculator saves the history of operations to a CSV file using pandas. The file path can be configured in the .env file.
+
+Display the help menu with the `help` command, which lists all available commands and their descriptions.
+
+Exit the calculator by typing `exit` or pressing Ctrl+C.
+
+## Logging
+The application uses Python's built-in logging module to log operations, errors, and other significant events. Logs are saved to a file specified in the configuration.
+
+## Testing
+python -m pytest tests/ -v
+
+## Coverage
+python -m pytest tests/ --cov=app --cov-fail-under=90
+
+## Continuous Integration
+GitHub Actions runs tests and enforces 90% coverage
+on pushes and pull requests to main.
+
+## Optional Enhancement
+Dynamic Help Menu implemented with the Decorator Pattern.

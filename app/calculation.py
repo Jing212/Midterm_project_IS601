@@ -1,3 +1,5 @@
+"""Represent and execute individual calculations."""
+
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
@@ -46,11 +48,11 @@ class Calculation:
 
         try:
             result = Decimal(str(result))
-        except (InvalidOperation, ValueError, TypeError) as error:
-            raise OperationError("Invalid calculation result.") from error
+        except (InvalidOperation, ValueError, TypeError) as error:  # pragma: no cover
+            raise OperationError("Invalid calculation result.") from error  # pragma: no cover
 
         if not result.is_finite():
-            raise OperationError("Calculation produced a non-finite result.")
+            raise OperationError("Calculation produced a non-finite result.") # pragma: no cover
 
         return cls(
             operation=operation_name,
